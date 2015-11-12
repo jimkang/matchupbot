@@ -6,7 +6,7 @@ var templates = [
   '%1 vs. %2!',
   '%1 vs. %2: The Decisive Moment',
   'Fight of the Century: %1 vs. %2',
-  'New Year\'s Eve\nSaitama Super Arena\n%1 vs. %2!',
+  '– New Year\'s Eve –\n– Saitama Super Arena –\n== %1 vs. %2! ==',
   'Final Conflict: %1 vs. %2. This Saturday.',
   '%1. %2. Both will enter. One will leave.',
   'LIVE! On pay-per-view: %1 vs. %2',
