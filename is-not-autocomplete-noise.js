@@ -38,7 +38,6 @@ var autocompleteNoise = [
   'ia',
   'ks',
   'ky',
-  'la',
   'mh',
   'md',
   'ma',
@@ -76,7 +75,6 @@ var autocompleteNoise = [
 
 function isNotAutoCompleteNoise(suggestion) {
   var verdict = true;
-  debugger;
   var lowercaseSuggestion = suggestion.toLowerCase();
   var words = lowercaseSuggestion.split(/\W/);
   var noise = _.intersection(autocompleteNoise, words);

@@ -2,9 +2,10 @@ var config = require('./config');
 var callNextTick = require('call-next-tick');
 var Twit = require('twit');
 var async = require('async');
-var jokeItUp = require('./joke-it-up');
+var matchUp = require('./match-up');
 var createWordnok = require('wordnok').createWordnok;
 var autocompl = require('autocompl');
+var formatMatchup = require('./format-matchup');
 
 var dryRun = false;
 if (process.argv.length > 2) {
@@ -16,7 +17,8 @@ var twit = new Twit(config.twitter);
 async.waterfall(
   [
     getWords,
-    makeJokeWithWord,
+    makeMatchupWithWord,
+    formatMatchup,
     postTweet
   ],
   wrapUp
@@ -29,9 +31,8 @@ function getWords(done) {
   wordnok.getRandomWords({}, done);
 }
 
-function makeJokeWithWord(words, done) {
-  debugger;
-  jokeItUp(
+function makeMatchupWithWord(words, done) {
+  matchUp(
     {
       base: words[0],
       autocompl: autocompl
@@ -41,7 +42,6 @@ function makeJokeWithWord(words, done) {
 }
 
 function postTweet(text, done) {
-  debugger;
   if (dryRun) {
     console.log('Would have tweeted:', text);
     callNextTick(done);

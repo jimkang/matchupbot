@@ -8,8 +8,9 @@ var isPluralization = require('./is-pluralization');
 var isWhitespaceVariation = require('./is-whitespace-variation');
 var iscool = createIsCool();
 var probable = require('probable');
+var parseIntoFactions = require('./parse-into-factions');
 
-function jokeItUp(opts, done) {
+function matchUp(opts, done) {
   var base;
   var autocompl;
 
@@ -20,10 +21,9 @@ function jokeItUp(opts, done) {
 
   base += ' vs ';
 
-  autocompl(base, makeJokeWithSuggestions);
+  autocompl(base, makeMatchupWithSuggestions);
 
-  function makeJokeWithSuggestions(error, suggestions) {
-    debugger;
+  function makeMatchupWithSuggestions(error, suggestions) {
     if (error) {
       done(error);
     }
@@ -31,7 +31,7 @@ function jokeItUp(opts, done) {
       done(new Error('Got no suggestions.'));
     }
     else {
-      var whosThere;
+      var rawMatchup;
       suggestions = probable.shuffle(suggestions);
 
       for (var i = 0; i < suggestions.length; ++i) {
@@ -43,42 +43,19 @@ function jokeItUp(opts, done) {
           isNotAutoCompleteNoise(suggestion) &&
           iscool(suggestion)) {
 
-          whosThere = suggestion;
+          rawMatchup = parseIntoFactions(suggestion);
           break;
-        }        
+        }
       }
 
-      if (!whosThere) {
+      if (!rawMatchup) {
         done(new Error('Could not find suitable suggestion.'));
       }
       else {
-        done(null, whosThere);
+        done(null, rawMatchup);
       }
     }
   }
 }
 
-var jokeTemplate = 'Knock knock!\n' + 
-  '    Who\'s there?\n' + 
-  '%base%\n' +
-  '    %base% who?\n' + 
-  '%whosthere%!';
-
-function formatJoke(base, whosThere) {
-  return jokeTemplate
-    .replace(/%base%/g, capitalizeFirst(base))
-    .replace('%whosthere%', capitalizeFirst(whosThere));
-}
-
-function capitalizeFirst(s) {
-  var capitalized = '';
-  if (s.length > 0) {
-    capitalized += s.slice(0, 1).toUpperCase();
-  }
-  if (s.length > 1) {
-    capitalized += s.slice(1);
-  }
-  return capitalized;
-}
-
-module.exports = jokeItUp;
+module.exports = matchUp;

@@ -1,7 +1,7 @@
-bdd-poetry
-==================
+matchupbot
+==========
 
-This is a bot that posts BDD-style poems.
+This is a bot that posts matchups.
 
 Installation
 ------------
@@ -27,7 +27,7 @@ Usage
 
 Try it without posting:
 
-    node post-joke.js --dry
+    node post-matchup.js --dry
 
 Tests
 -----
