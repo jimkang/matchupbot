@@ -7,8 +7,8 @@ var isHyphenationVariation = require('./is-hyphenation-variation');
 var isPluralization = require('./is-pluralization');
 var isWhitespaceVariation = require('./is-whitespace-variation');
 var iscool = createIsCool();
-var probable = require('probable');
 var parseIntoFactions = require('./parse-into-factions');
+var probable = require('probable');
 
 function matchUp(opts, done) {
   var base;

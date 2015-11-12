@@ -1,22 +1,27 @@
-HOMEDIR = $(shell pwd)
-GITDIR = /var/repos/whosthereautocomplete.git
-
 test:
 	node tests/basictests.js
 
 run:
 	node post-matchup.js
 
-sync-worktree-to-git:
-	git --work-tree=$(HOMEDIR) --git-dir=$(GITDIR) checkout -f
+stop-docker-machine:
+	docker-machine stop dev
 
-npm-install:
-	cd $(HOMEDIR)
-	npm install
-	npm prune
+start-docker-machine:
+	docker-machine start dev
 
-post-receive: sync-worktree-to-git npm-install
+# connect-to-docker-machine:
+	# eval "$(docker-machine env dev)"
 
-pushall:
-	git push origin master && git push server master
+build-docker-image:
+	docker build -t jkang/matchupbot .
 
+push-docker-image: build-docker-image
+	docker push jkang/matchupbot
+
+run-docker-tweet:
+	docker run -v $(HOMEDIR)/config:/usr/src/app/config \
+		jkang/matchupbot make run
+
+pushall: push-docker-image
+	git push origin master

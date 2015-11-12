@@ -1,4 +1,4 @@
-var config = require('./config');
+var config = require('./config/config');
 var callNextTick = require('call-next-tick');
 var Twit = require('twit');
 var async = require('async');
@@ -32,6 +32,11 @@ function getWords(done) {
 }
 
 function makeMatchupWithWord(words, done) {
+  if (!words) {
+    done(new Error('No suggestions.'));
+    return;
+  }
+  
   matchUp(
     {
       base: words[0],
