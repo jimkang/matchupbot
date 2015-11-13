@@ -12,17 +12,21 @@ if (process.argv.length > 2) {
   dryRun = (process.argv[2].toLowerCase() == '--dry');
 }
 
+var retryCount = 0;
+
 var twit = new Twit(config.twitter);
 
-async.waterfall(
-  [
-    getWords,
-    makeMatchupWithWord,
-    formatMatchup,
-    postTweet
-  ],
-  wrapUp
-);
+function run() {
+  async.waterfall(
+    [
+      getWords,
+      makeMatchupWithWord,
+      formatMatchup,
+      postTweet
+    ],
+    wrapUp
+  );
+}
 
 function getWords(done) {
   var wordnok = createWordnok({
@@ -61,10 +65,19 @@ function postTweet(text, done) {
 
 function wrapUp(error, data) {
   if (error) {
-    console.log(error, error.stack);
+    if (retryCount < 5 && error.message === 'Got no suggestions.') {
+      console.log('"Got no suggestions." error. Retrying.');
+      retryCount += 1;
+      callNextTick(run);
+    }
+    else {
+      console.log(error, error.stack);
 
-    if (data) {
-      console.log('data:', data);
+      if (data) {
+        console.log('data:', data);
+      }
     }
   }
 }
+
+run();
